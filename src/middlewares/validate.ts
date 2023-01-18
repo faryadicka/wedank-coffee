@@ -11,4 +11,15 @@ const checkDuplicate = (email: string) => {
   })
 }
 
-module.exports = { checkDuplicate }
+const checkOTP = (otpCode: any) => {
+  return new Promise((resolve: any, reject: any) => {
+    dbmdw.query('SELECT * FROM users WHERE otp_code LIKE $1', [otpCode], (err: any, res: any) => {
+      if (err) {
+        return reject(err)
+      }
+      return resolve(res)
+    })
+  })
+}
+
+module.exports = { checkDuplicate, checkOTP }

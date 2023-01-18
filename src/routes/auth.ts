@@ -1,6 +1,9 @@
 const RouterApp = require("express").Router();
-const { registerUserController: registerControl } = require('../controllers/auth')
+const { registerUserController: registerControl, verifyAccountController: verifyControl } = require('../controllers/auth')
 
-RouterApp.get('/register', registerControl)
+RouterApp
+  .get('/register', registerControl)
+  .get('/verify/:otp', verifyControl)
+
 
 module.exports = RouterApp;
