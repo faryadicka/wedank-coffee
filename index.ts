@@ -2,39 +2,50 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const PORT = 5000;
+const db = require("./src/configs/database");
+const mainRoute = require('./src/routes/index')
 
 const app = express();
 
-app.use(
-  express.urlencoded({
-    extended: false,
+db.connect()
+  .then(() => {
+    console.log("Database Connected!");
+    app.use(
+      express.urlencoded({
+        extended: false,
+      })
+    );
+
+    app.use(express.json());
+
+    const corsOptions = {
+      origin: ["*"],
+      methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+      // allowedHeaders: ["Content-Type", "x-access-token"],
+    };
+
+    app.use(cors(corsOptions));
+
+    app.get("/", (req: any, res: any) => {
+      res.status(200).json({
+        message: "Welcome to Wedank Server",
+        status: 200,
+        isSuccess: true,
+      });
+    });
+
+    app.use('/', mainRoute)
+
+    app.use((req: any, res: any) => {
+      res.status(404).send({
+        message: "URL is wrong!",
+      });
+    });
+
+    app.listen(PORT, () => {
+      console.log(`PORT listening on ${PORT}`);
+    });
   })
-);
-
-app.use(express.json());
-
-const corsOptions = {
-  origin: ["*"],
-  methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-  // allowedHeaders: ["Content-Type", "x-access-token"],
-};
-
-app.use(cors(corsOptions));
-
-app.get("/", (req: any, res: any) => {
-  res.status(200).json({
-    message: "Welcome to Wedank Server",
-    status: 200,
-    isSuccess: true,
+  .catch((err: any) => {
+    console.log(err);
   });
-});
-
-app.use((req: any, res: any) => {
-  res.status(404).send({
-    message: "URL is wrong!",
-  });
-});
-
-app.listen(PORT, () => {
-  console.log(`PORT listening on ${PORT}`);
-});
