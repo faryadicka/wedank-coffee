@@ -24,4 +24,15 @@ const registerUserModel = (
   })
 };
 
-module.exports = { registerUserModel };
+const verifyAccountModel = (otp: any) => {
+  return new Promise((resolve: any, reject: any) => {
+    dbpg.query("UPDATE users SET status = 'active' WHERE otp_code LIKE $1", [otp], (err: any, res: any) => {
+      if (err) {
+        return reject(err)
+      }
+      return resolve(res)
+    })
+  })
+}
+
+module.exports = { registerUserModel, verifyAccountModel };
