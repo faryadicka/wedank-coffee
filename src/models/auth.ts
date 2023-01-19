@@ -35,4 +35,15 @@ const verifyAccountModel = (otp: any) => {
   })
 }
 
-module.exports = { registerUserModel, verifyAccountModel };
+const loginUserModel = (email: any) => {
+  return new Promise((resolve: any, reject: any) => {
+    dbpg.query('SELECT * FROM users WHERE email LIKE $1', [email], (err: any, res: any) => {
+      if (err) {
+        return reject(err)
+      }
+      return resolve(res)
+    })
+  })
+}
+
+module.exports = { registerUserModel, verifyAccountModel, loginUserModel };

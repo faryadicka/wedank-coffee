@@ -1,9 +1,10 @@
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 const { onFailed, onSuccess } = require("../helpers/response")
-const { registerUserModel: registerModel, verifyAccountModel: verifyAccount } = require('../models/auth')
+const { registerUserModel: registerModel, verifyAccountModel: verifyAccount, loginUserModel: loginUser } = require('../models/auth')
 const { checkDuplicate: checkEmail, checkOTP: checkOTPCode } = require('../middlewares/validate')
 const { sendEmailVerification: sendEmail } = require('../configs/nodemailer')
 const { generateOTP: otp } = require('../helpers/otpGenerator')
-const bcrypt = require('bcrypt')
 var otp_code = otp()
 
 const registerUserController = async (req: any, res: any) => {
@@ -38,4 +39,36 @@ const verifyAccountController = async (req: any, res: any) => {
   }
 }
 
-module.exports = { registerUserController, verifyAccountController }
+const loginUserController = async (req: any, res: any) => {
+  try {
+    const { email, password } = req.body
+    const data = await loginUser(email)
+    if (data.rowCount > 0) {
+      const result = data.rows[0]
+      const hashedPass = result.password
+      const match = await bcrypt.compare(password, hashedPass)
+      const payload = {
+        id: result.id,
+        role: result.role_id,
+        email: result.email,
+        otp: result.otp_code
+      }
+      if (match) {
+        jwt.sign(payload, process.env.PRIVATE_KEY, { expiresIn: '24h' }, (err: any, token: any) => {
+          if (err) {
+            onFailed(res, 500, err)
+          }
+          onSuccess(res, 200, 'Login Successfully', { token })
+        })
+      } else {
+        onFailed(res, 403, 'Password is wrong!!')
+      }
+    } else {
+      onFailed(res, 403, 'Email is wrong!!!')
+    }
+  } catch (error: any) {
+    onFailed(res, 500, error.message, error)
+  }
+}
+
+module.exports = { registerUserController, verifyAccountController, loginUserController }
