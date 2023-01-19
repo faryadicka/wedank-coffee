@@ -17,7 +17,7 @@ const sendEmailVerification = (email: string, otpCode: string) => {
   const mailOptions = {
     from: USER_TRANSPORTER,
     to: email,
-    subject: 'Email Verification Ragister',
+    subject: 'Email Verification Register',
     text: `Your email : ${email} 
     click this link for next step http://localhost:8000/auth/verify/${otpCode}`
   }
@@ -32,4 +32,23 @@ const sendEmailVerification = (email: string, otpCode: string) => {
   })
 }
 
-module.exports = { sendEmailVerification }
+const sendEmailLink = (id: string, otp: any, email: string) => {
+  const mailOptions = {
+    from: USER_TRANSPORTER,
+    to: email,
+    subject: 'Link for reset password',
+    text: `Your email : ${email} 
+    click this link for next step http://localhost:8000/auth/reset/${id}-${otp}`
+  }
+  transporter.sendMail(mailOptions, (err: any, info: any) => {
+    if (err) {
+      console.log(err)
+      return err
+    } else {
+      console.log('Email sent: ' + info)
+      return info
+    }
+  })
+}
+
+module.exports = { sendEmailVerification, sendEmailLink }

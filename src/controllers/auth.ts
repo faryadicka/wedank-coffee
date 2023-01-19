@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const { onFailed, onSuccess } = require("../helpers/response")
 const { registerUserModel: registerModel, verifyAccountModel: verifyAccount, loginUserModel: loginUser } = require('../models/auth')
 const { checkDuplicate: checkEmail, checkOTP: checkOTPCode } = require('../middlewares/validate')
-const { sendEmailVerification: sendEmail } = require('../configs/nodemailer')
+const { sendEmailVerification: sendEmail, sendEmailLink: sendLink } = require('../configs/nodemailer')
 const { generateOTP: otp } = require('../helpers/otpGenerator')
 var otp_code = otp()
 
@@ -71,4 +71,28 @@ const loginUserController = async (req: any, res: any) => {
   }
 }
 
-module.exports = { registerUserController, verifyAccountController, loginUserController }
+const resetPassController = async (req: any, res: any) => {
+  try {
+    const { email } = req.body
+    const data = await loginUser(email)
+    if (data.rowCount > 0) {
+      const result = data.rows[0]
+      await sendLink(result.id, result.otp_code, result.email)
+      onSuccess(res, 200, 'Please check your email to next step!')
+    } else {
+      onFailed(res, 403, 'Email isn`t registered!!!')
+    }
+  } catch (error: any) {
+    onFailed(res, 500, error.message, error)
+  }
+}
+
+const forgotPassController = async (req: any, res: any) => {
+  try {
+    const { email, newPassword } = req.body
+  } catch (error: any) {
+    onFailed(res, 500, error.message, error)
+  }
+}
+
+module.exports = { registerUserController, verifyAccountController, loginUserController, resetPassController }
