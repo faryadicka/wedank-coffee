@@ -1,5 +1,5 @@
 const RouterApp = require("express").Router();
-const { forgotPassController: forgotControl, resetPassController: resetControl, registerUserController: registerControl, verifyAccountController: verifyControl, loginUserController: loginControl } = require('../controllers/auth')
+const { logoutController: logoutControl, forgotPassController: forgotControl, resetPassController: resetControl, registerUserController: registerControl, verifyAccountController: verifyControl, loginUserController: loginControl } = require('../controllers/auth')
 const { verifyToken: authToken } = require('../middlewares/verifyToken')
 
 RouterApp
@@ -8,6 +8,7 @@ RouterApp
   .post('/reset', resetControl)
   .patch('/forgot/:secret', forgotControl)
   .get('/verify/:otp', verifyControl)
+  .delete('/logout', logoutControl)
 
 
 module.exports = RouterApp

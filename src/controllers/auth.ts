@@ -54,13 +54,13 @@ const loginUserController = async (req: any, res: any) => {
         email: result.email,
         otp: result.otp_code
       }
+      clientValue.set('userId', result.id)
       if (match) {
-        jwt.sign(payload, process.env.PRIVATE_KEY, { expiresIn: '24h' }, (err: any, token: any) => {
-          if (err) {
-            onFailed(res, 500, err)
-          }
-          onSuccess(res, 200, 'Login Successfully', { token })
-        })
+        const tokenResult = jwt.sign(payload, process.env.PRIVATE_KEY, { expiresIn: '24h' })
+        const userId = await clientValue.get('userId')
+        clientValue.set(`userToken-${userId}`, tokenResult)
+        const token = await clientValue.get(`userToken-${userId}`)
+        onSuccess(res, 200, 'Login successfully', { token })
       } else {
         onFailed(res, 403, 'Password is wrong!!')
       }
@@ -94,14 +94,28 @@ const forgotPassController = async (req: any, res: any) => {
     const { newPassword } = req.body
     const { secret } = req.params
     const encodeUrl = atob(secret)
-    const splitUrl = encodeUrl.split('-&')
+    const splitUrl = encodeUrl.split('#-&')
     const email = await clientValue.get('email')
     const pass = await bcrypt.hash(newPassword, 10)
-    await forgotPass(email, pass, splitUrl[0], splitUrl[1])
-    onSuccess(res, 200, 'Reset password successfuly')
+    const result = await forgotPass(email, pass, splitUrl[0], splitUrl[1])
+    if (result.rowCount === 1) {
+      return onSuccess(res, 200, 'Reset password successfuly')
+    }
+    onFailed(res, 400, 'Error code, better repeat the previous step')
   } catch (error: any) {
     onFailed(res, 500, error.message, error)
   }
 }
 
-module.exports = { registerUserController, verifyAccountController, loginUserController, resetPassController, forgotPassController }
+const logoutController = async (req: any, res: any) => {
+  try {
+    const userId = await clientValue.get('userId')
+    clientValue.del(`userToken-${userId}`)
+    const token = await clientValue.get(`userToken-${userId}`)
+    onSuccess(res, 500, 'Logout Successfuly', { token })
+  } catch (error: any) {
+    onFailed(res, 500, 'Internal Server Error', error)
+  }
+}
+
+module.exports = { registerUserController, verifyAccountController, loginUserController, resetPassController, forgotPassController, logoutController }
