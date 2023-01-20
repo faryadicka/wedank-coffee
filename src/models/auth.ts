@@ -46,9 +46,9 @@ const loginUserModel = (email: any) => {
   })
 }
 
-const forgotPassModel = (email: any, newPassword: any) => {
+const forgotPassModel = (email: any, newPassword: any, id: string, otp: any) => {
   return new Promise((resolve: any, reject: any) => {
-    dbpg.query("UPDATE users SET password = $1 WHERE email LIKE $2", [newPassword, email], (err: any, res: any) => {
+    dbpg.query("UPDATE users SET password = $1 WHERE email LIKE $2 AND id LIKE $3 AND otp_code LIKE $4", [newPassword, email, id, otp], (err: any, res: any) => {
       if (err) return reject(err)
       return resolve(res)
     })
