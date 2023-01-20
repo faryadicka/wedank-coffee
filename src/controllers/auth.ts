@@ -54,13 +54,13 @@ const loginUserController = async (req: any, res: any) => {
         email: result.email,
         otp: result.otp_code
       }
+      clientValue.set('userId', result.id)
       if (match) {
-        jwt.sign(payload, process.env.PRIVATE_KEY, { expiresIn: '24h' }, (err: any, token: any) => {
-          if (err) {
-            onFailed(res, 500, err)
-          }
-          onSuccess(res, 200, 'Login Successfully', { token })
-        })
+        const tokenResult = jwt.sign(payload, process.env.PRIVATE_KEY, { exiresIn: '24h' })
+        const userId = await clientValue.get('userId')
+        clientValue.set(`userToken-${userId}`, tokenResult)
+        const token = await clientValue.get(`userToken-${userId}`)
+        onSuccess(res, 200, 'Login successfully', { token })
       } else {
         onFailed(res, 403, 'Password is wrong!!')
       }
@@ -104,6 +104,17 @@ const forgotPassController = async (req: any, res: any) => {
     onFailed(res, 400, 'Error code, better repeat the previous step')
   } catch (error: any) {
     onFailed(res, 500, error.message, error)
+  }
+}
+
+const logoutController = async (req: any, res: any) => {
+  try {
+    const userId = await clientValue.get('userId')
+    clientValue.del(`userToken-${userId}`)
+    const token = await clientValue.get(`userToken-${userId}`)
+    onSuccess(res, 500, 'Logout Successfuly', { token })
+  } catch (error: any) {
+    onFailed(res, 500, 'Internal Server Error', error)
   }
 }
 
