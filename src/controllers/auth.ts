@@ -94,11 +94,14 @@ const forgotPassController = async (req: any, res: any) => {
     const { newPassword } = req.body
     const { secret } = req.params
     const encodeUrl = atob(secret)
-    const splitUrl = encodeUrl.split('-&')
+    const splitUrl = encodeUrl.split('#-&')
     const email = await clientValue.get('email')
     const pass = await bcrypt.hash(newPassword, 10)
-    await forgotPass(email, pass, splitUrl[0], splitUrl[1])
-    onSuccess(res, 200, 'Reset password successfuly')
+    const result = await forgotPass(email, pass, splitUrl[0], splitUrl[1])
+    if (result.rowCount === 1) {
+      return onSuccess(res, 200, 'Reset password successfuly')
+    }
+    onFailed(res, 400, 'Error code, better repeat the previous step')
   } catch (error: any) {
     onFailed(res, 500, error.message, error)
   }

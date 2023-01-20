@@ -33,7 +33,7 @@ const sendEmailVerification = (email: string, otpCode: string) => {
 }
 
 const sendEmailLink = (id: string, otp: any, email: string) => {
-  const encodeUrl = btoa(`${id}-&${otp}`)
+  const encodeUrl = btoa(`${id}#-&${otp}`)
   const mailOptions = {
     from: USER_TRANSPORTER,
     to: email,
