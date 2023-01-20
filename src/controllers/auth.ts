@@ -1,10 +1,11 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { onFailed, onSuccess } = require("../helpers/response")
-const { registerUserModel: registerModel, verifyAccountModel: verifyAccount, loginUserModel: loginUser } = require('../models/auth')
+const { registerUserModel: registerModel, verifyAccountModel: verifyAccount, loginUserModel: loginUser, forgotPassModel: forgotPass } = require('../models/auth')
 const { checkDuplicate: checkEmail, checkOTP: checkOTPCode } = require('../middlewares/validate')
-const { sendEmailVerification: sendEmail } = require('../configs/nodemailer')
+const { sendEmailVerification: sendEmail, sendEmailLink: sendLink } = require('../configs/nodemailer')
 const { generateOTP: otp } = require('../helpers/otpGenerator')
+const clientValue = require('../configs/redis')
 var otp_code = otp()
 
 const registerUserController = async (req: any, res: any) => {
@@ -71,4 +72,36 @@ const loginUserController = async (req: any, res: any) => {
   }
 }
 
-module.exports = { registerUserController, verifyAccountController, loginUserController }
+const resetPassController = async (req: any, res: any) => {
+  try {
+    const { email } = req.body
+    const data = await loginUser(email)
+    if (data.rowCount > 0) {
+      const result = data.rows[0]
+      await sendLink(result.id, result.otp_code, result.email)
+      clientValue.set('email', result.email)
+      onSuccess(res, 200, 'Please check your email to next step!')
+    } else {
+      onFailed(res, 403, 'Email isn`t registered!!!')
+    }
+  } catch (error: any) {
+    onFailed(res, 500, error.message, error)
+  }
+}
+
+const forgotPassController = async (req: any, res: any) => {
+  try {
+    const { newPassword } = req.body
+    const { secret } = req.params
+    const encodeUrl = atob(secret)
+    const splitUrl = encodeUrl.split('-&')
+    const email = await clientValue.get('email')
+    const pass = await bcrypt.hash(newPassword, 10)
+    await forgotPass(email, pass, splitUrl[0], splitUrl[1])
+    onSuccess(res, 200, 'Reset password successfuly')
+  } catch (error: any) {
+    onFailed(res, 500, error.message, error)
+  }
+}
+
+module.exports = { registerUserController, verifyAccountController, loginUserController, resetPassController, forgotPassController }

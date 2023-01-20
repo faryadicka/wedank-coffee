@@ -4,11 +4,13 @@ const cors = require("cors");
 const PORT = 5000;
 const db = require("./src/configs/database");
 const mainRoute = require('./src/routes/index')
+const clientRedis = require('./src/configs/redis')
 
 const app = express();
 
 db.connect()
   .then(() => {
+    clientRedis.connect()
     console.log("Database Connected!");
     app.use(
       express.urlencoded({

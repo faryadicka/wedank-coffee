@@ -46,4 +46,13 @@ const loginUserModel = (email: any) => {
   })
 }
 
-module.exports = { registerUserModel, verifyAccountModel, loginUserModel };
+const forgotPassModel = (email: any, newPassword: any, id: string, otp: any) => {
+  return new Promise((resolve: any, reject: any) => {
+    dbpg.query("UPDATE users SET password = $1 WHERE email LIKE $2 AND id LIKE $3 AND otp_code LIKE $4", [newPassword, email, id, otp], (err: any, res: any) => {
+      if (err) return reject(err)
+      return resolve(res)
+    })
+  })
+}
+
+module.exports = { registerUserModel, verifyAccountModel, loginUserModel, forgotPassModel };
