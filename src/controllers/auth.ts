@@ -56,7 +56,7 @@ const loginUserController = async (req: any, res: any) => {
       }
       clientValue.set('userId', result.id)
       if (match) {
-        const tokenResult = jwt.sign(payload, process.env.PRIVATE_KEY, { exiresIn: '24h' })
+        const tokenResult = jwt.sign(payload, process.env.PRIVATE_KEY, { expiresIn: '24h' })
         const userId = await clientValue.get('userId')
         clientValue.set(`userToken-${userId}`, tokenResult)
         const token = await clientValue.get(`userToken-${userId}`)
@@ -118,4 +118,4 @@ const logoutController = async (req: any, res: any) => {
   }
 }
 
-module.exports = { registerUserController, verifyAccountController, loginUserController, resetPassController, forgotPassController }
+module.exports = { registerUserController, verifyAccountController, loginUserController, resetPassController, forgotPassController, logoutController }
