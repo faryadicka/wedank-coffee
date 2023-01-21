@@ -26,7 +26,7 @@ const changePasswordController = async (req: any, res: any) => {
     const { password: hashedPass } = data.rows[0]
     const match = await checkPassword(currentPassword, hashedPass)
     if (match) {
-      const result = await changePassModel(pass, email)
+      await changePassModel(pass, email)
       return onSuccess(res, 200, 'Change password successfuly')
     }
     onFailed(res, 403, 'Current Password is wrong!', null)
