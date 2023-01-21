@@ -1,4 +1,4 @@
-const dbpg = require("../configs/database");
+const dbAuth = require("../configs/database");
 const { v4: uuidv4 } = require("uuid");
 
 const registerUserModel = (
@@ -11,7 +11,7 @@ const registerUserModel = (
 ) => {
   return new Promise((resolve: any, reject: any) => {
     const id = uuidv4();
-    dbpg.query(
+    dbAuth.query(
       "INSERT INTO users(id, email, password, phone_number, first_name, last_name, otp_code) VALUES ($1, $2, $3, $4, $5, $6, $7)",
       [id, email, password, phoneNumber, firstName, lastName, otpCode],
       (err: any, res: any) => {
@@ -26,7 +26,7 @@ const registerUserModel = (
 
 const verifyAccountModel = (otp: any) => {
   return new Promise((resolve: any, reject: any) => {
-    dbpg.query("UPDATE users SET status = 'active' WHERE otp_code LIKE $1", [otp], (err: any, res: any) => {
+    dbAuth.query("UPDATE users SET status = 'active' WHERE otp_code LIKE $1", [otp], (err: any, res: any) => {
       if (err) {
         return reject(err)
       }
@@ -37,7 +37,7 @@ const verifyAccountModel = (otp: any) => {
 
 const loginUserModel = (email: any) => {
   return new Promise((resolve: any, reject: any) => {
-    dbpg.query('SELECT * FROM users WHERE email LIKE $1', [email], (err: any, res: any) => {
+    dbAuth.query('SELECT * FROM users WHERE email LIKE $1', [email], (err: any, res: any) => {
       if (err) {
         return reject(err)
       }
@@ -48,7 +48,7 @@ const loginUserModel = (email: any) => {
 
 const forgotPassModel = (email: any, newPassword: any, id: string, otp: any) => {
   return new Promise((resolve: any, reject: any) => {
-    dbpg.query("UPDATE users SET password = $1 WHERE email LIKE $2 AND id LIKE $3 AND otp_code LIKE $4", [newPassword, email, id, otp], (err: any, res: any) => {
+    dbAuth.query("UPDATE users SET password = $1 WHERE email LIKE $2 AND id LIKE $3 AND otp_code LIKE $4", [newPassword, email, id, otp], (err: any, res: any) => {
       if (err) return reject(err)
       return resolve(res)
     })

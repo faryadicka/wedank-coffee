@@ -1,7 +1,6 @@
 const { onFailed: fail, onSuccess: success } = require("../helpers/response")
-
-
 const jwtVerify = require('jsonwebtoken')
+
 
 const verifyToken = async (req: any, res: any, next: any) => {
   const authHeader = req.headers['authorization']
