@@ -1,8 +1,7 @@
-const RouterApp = require("express").Router();
+const RouterAuth = require("express").Router();
 const { logoutController: logoutControl, forgotPassController: forgotControl, resetPassController: resetControl, registerUserController: registerControl, verifyAccountController: verifyControl, loginUserController: loginControl } = require('../controllers/auth')
-const { verifyToken: authToken } = require('../middlewares/verifyToken')
 
-RouterApp
+RouterAuth
   .post('/register', registerControl)
   .post('/login', loginControl)
   .post('/reset', resetControl)
@@ -11,4 +10,4 @@ RouterApp
   .delete('/logout', logoutControl)
 
 
-module.exports = RouterApp
+module.exports = RouterAuth
