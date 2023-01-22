@@ -3,6 +3,19 @@ const { updateUserModel: updateModel, changePasswordModel: changePassModel } = r
 const { checkPassword, checkDuplicate } = require('../middlewares/validate')
 const bcryptUser = require('bcrypt')
 
+const getUserController = async (req: any, res: any) => {
+  try {
+    const { email } = req.userInfo
+    const data = await checkDuplicate(email)
+    const result = data.rows[0]
+    if (data.rowCount === 1) {
+      return onSuccess(res, 200, 'Get user successfully', result)
+    }
+    onFailed(res, 400, 'User not found', null)
+  } catch (error: any) {
+    onFailed(res, 500, 'User not found', error.message)
+  }
+}
 
 const updateUserController = async (req: any, res: any) => {
   try {
@@ -35,4 +48,4 @@ const changePasswordController = async (req: any, res: any) => {
   }
 }
 
-module.exports = { updateUserController, changePasswordController }
+module.exports = { updateUserController, changePasswordController, getUserController }
