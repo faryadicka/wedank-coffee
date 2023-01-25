@@ -20,6 +20,8 @@ const getUserController = async (req: any, res: any) => {
 const updateUserController = async (req: any, res: any) => {
   try {
     const { email } = req.userInfo
+    const { file } = req
+    console.log(file)
     const { phoneNumber, address, gender, firstName, lastName, birthdate } = req.body
     await updateModel(phoneNumber, address, gender, firstName, lastName, email, birthdate)
     onSuccess(res, 200, 'Update user successfully')
