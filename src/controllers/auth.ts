@@ -31,7 +31,7 @@ const verifyAccountController = async (req: any, res: any) => {
     const checkOTP = await checkOTPCode(otp)
     if (checkOTP.rowCount === 1) {
       await verifyAccount(otp)
-      onSuccess(res, 200, 'Your account has been verified')
+      return onSuccess(res, 200, 'Your account has been verified')
     }
     onFailed(res, 404, "OTP isn't match")
   } catch (error: any) {
@@ -65,7 +65,7 @@ const loginUserController = async (req: any, res: any) => {
         onFailed(res, 403, 'Password is wrong!!')
       }
     } else {
-      onFailed(res, 403, 'Email is wrong!!!')
+      onFailed(res, 403, 'User not found!')
     }
   } catch (error: any) {
     onFailed(res, 500, error.message, error)
