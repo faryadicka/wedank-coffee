@@ -23,7 +23,7 @@ const sendEmailVerification = (email: string, otpCode: string) => {
   }
   transporter.sendMail(mailOptions, (err: any, info: any) => {
     if (err) {
-      console.log(err)
+      console.log(err.message)
       return err
     } else {
       console.log('Email sent: ' + info)
