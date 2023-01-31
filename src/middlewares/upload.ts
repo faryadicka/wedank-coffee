@@ -14,7 +14,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req: any, file: any) => {
     return {
-      folder: 'profile',
+      folder: 'wedank-images',
       format: 'jpeg',
       public_id: `${file.fieldname + "-" + Date.now() + path.extname(file.originalname)}`,
     };
@@ -35,6 +35,12 @@ const upload = multer({
   }
 }).single('avatar')
 
+const multipleUploads = multer({
+  storage, fileFilter: imageFilter, limits: {
+    fileSize: 1 * 1024 * 1024 // 5MB
+  }
+}).array('products_image', 4)
+
 const uploadProfile = (req: any, res: any, next: any) => {
   upload(req, res, (err: any) => {
     if (err) {
@@ -44,5 +50,14 @@ const uploadProfile = (req: any, res: any, next: any) => {
   })
 }
 
-module.exports = { uploadProfile }
+const uploadProducts = (req: any, res: any, next: any) => {
+  multipleUploads(req, res, (err: any) => {
+    if (err) {
+      return onFailed(res, 400, err.message, err)
+    }
+    next()
+  })
+}
+
+module.exports = { uploadProfile, uploadProducts }
 

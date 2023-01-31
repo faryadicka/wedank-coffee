@@ -60,7 +60,7 @@ const loginUserController = async (req: any, res: any) => {
         const userId = await clientValue.get('userId')
         clientValue.set(`userToken-${userId}`, tokenResult)
         const token = await clientValue.get(`userToken-${userId}`)
-        onSuccess(res, 200, 'Login successfully', { token })
+        onSuccess(res, 200, 'Login successfully', { token, role: result.role_id })
       } else {
         onFailed(res, 403, 'Password is wrong!!')
       }

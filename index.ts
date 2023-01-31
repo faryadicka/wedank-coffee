@@ -23,7 +23,6 @@ db.connect()
     const corsOptions = {
       origin: ["*"],
       methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-      // allowedHeaders: ["Content-Type", "x-access-token"],
     };
 
     app.use(cors(corsOptions));
