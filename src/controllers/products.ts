@@ -23,8 +23,8 @@ const createProductsController = async (req: any, res: any) => {
     const images_id = generateOTP()
     const { name, price, size, type_id, description } = req.body
     const { files } = req
-    const response = await createModel(name, Number(price), size, Number(type_id), description, images_id)
-    const response1 = await imagesModel(images_id, files[0].path, files[1].path, files[2].path, files[3].path)
+    await createModel(name, Number(price), size, Number(type_id), description, images_id)
+    await imagesModel(images_id, files[0].path, files[1].path, files[2].path, files[3].path)
     onSuccess(res, 200, 'Create product successfully')
   } catch (error: any) {
     onFailed(res, 500, 'Internal Server Error', error.message)

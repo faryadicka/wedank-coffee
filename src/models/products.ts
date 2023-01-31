@@ -6,7 +6,6 @@ const getAllProductsModel = (page: any = '1', limit: any) => {
     const offset = (Number(page) - 1) * Number(limit);
     const value = []
     let SQL = "SELECT p.created_at, p.id, p.name, p.images_id, p.price, p.size, p.type_id, p.description, pi2.image1, pi2.image2, pi2.image3, pi2.image4 FROM products as p LEFT JOIN product_images as pi2 ON p.images_id = pi2.id"
-
     if (limit) {
       SQL += " LIMIT $1 OFFSET $2"
       value.push(limit, offset)
