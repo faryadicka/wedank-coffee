@@ -1,15 +1,20 @@
 const dbProducts = require("../configs/database");
 const { v4: uuid } = require("uuid");
 
-const getAllProductsModel = (page: any = '1', limit: any) => {
+const getAllProductsModel = (page: any = '1', limit: any, order: any = 'ASC', sort: any = 'name') => {
   return new Promise((resolve: any, reject: any) => {
     const offset = (Number(page) - 1) * Number(limit);
     const value = []
-    let SQL = "SELECT p.created_at, p.id, p.name, p.images_id, p.price, p.size, p.type_id, p.description, pi2.image1, pi2.image2, pi2.image3, pi2.image4 FROM products as p LEFT JOIN product_images as pi2 ON p.images_id = pi2.id"
-    if (limit) {
+    let SQL = "SELECT p.created_at, p.id, p.name as name, p.images_id, p.price as price, p.size as size, p.type_id as type, p.description, pi2.image1, pi2.image2, pi2.image3, pi2.image4 FROM products as p LEFT JOIN product_images as pi2 ON p.images_id = pi2.id"
+    if (order && limit && sort) {
+      SQL += " ORDER BY " + sort + " " + order + " LIMIT $1 OFFSET $2"
+      value.push(limit, offset)
+    }
+    if (limit && !order && !sort) {
       SQL += " LIMIT $1 OFFSET $2"
       value.push(limit, offset)
     }
+    console.log(SQL)
     dbProducts.query(SQL, value, (err: any, res: any) => {
       if (err) return reject(err)
       return resolve(res)
