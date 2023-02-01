@@ -4,8 +4,8 @@ const { generateOTP } = require('../helpers/otpGenerator')
 
 const getAllProductsController = async (req: any, res: any) => {
   try {
-    const { page, limit, order, sort } = req.query
-    const response = await getAllModel(page, limit, order, sort)
+    const { page, limit, order, sort, name, type, min, max } = req.query
+    const response = await getAllModel(page, limit, order, sort, name, type, Number(min), Number(max))
     const result = response.rows.map((item: any) => {
       const imgValues = Object.values(item).filter((i: any) => {
         return String(i).includes('image')
@@ -23,7 +23,7 @@ const createProductsController = async (req: any, res: any) => {
     const images_id = generateOTP()
     const { name, price, size, type_id, description } = req.body
     const { files } = req
-    await createModel(name, Number(price), size, Number(type_id), description, images_id)
+    await createModel(name, Number(price), size.toUpperCase(), Number(type_id), description, images_id)
     await imagesModel(images_id, files[0].path, files[1].path, files[2].path, files[3].path)
     onSuccess(res, 200, 'Create product successfully')
   } catch (error: any) {
