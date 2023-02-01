@@ -1,5 +1,5 @@
 import { onFailed, onSuccess } from "../helpers/response"
-const { createProductsModel: createModel, insertImagesModel: imagesModel, getAllProductsModel: getAllModel } = require('../models/products')
+const { updateProductModel: updateModel, createProductsModel: createModel, insertImagesModel: imagesModel, getAllProductsModel: getAllModel } = require('../models/products')
 const { generateOTP } = require('../helpers/otpGenerator')
 
 const getAllProductsController = async (req: any, res: any) => {
@@ -31,4 +31,16 @@ const createProductsController = async (req: any, res: any) => {
   }
 }
 
-module.exports = { createProductsController, getAllProductsController }
+const updateProductController = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+    const { name, price, size, type, description } = req.body
+    console.log(id)
+    const response = await updateModel(name, price, size, type, description, id)
+    onSuccess(res, 200, 'Update Product successfully', response.rows)
+  } catch (error: any) {
+    onFailed(res, 500, 'Internal Server Error', error.message)
+  }
+}
+
+module.exports = { createProductsController, getAllProductsController, updateProductController }

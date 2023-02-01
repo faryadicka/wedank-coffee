@@ -70,6 +70,15 @@ const insertImagesModel = (id: any, image1: any, image2: any, image3: any, image
   })
 }
 
+const updateProductModel = (name: any, price: any, size: any, type: any, description: any, id: any) => {
+  return new Promise((resolve: any, reject: any) => {
+    dbProducts.query("UPDATE products SET name=COALESCE($1, name), price=COALESCE($2, price), size=COALESCE($3, size), type_id=COALESCE($4, type_id), description=COALESCE($5, description), updated_at=now() WHERE id = $6 RETURNING *", [name, price, size, type, description, id], (err: any, res: any) => {
+      if (err) return reject(err)
+      return resolve(res)
+    })
+  })
+}
+
 const updateImagesModel = (image1: any, image2: any, image3: any, image4: any, id: any) => {
   return new Promise((resolve: any, reject: any) => {
     dbProducts.query("UPDATE product_images SET image1=COALESCE($1, image1), image2=COALESCE($2, image2), image3=COALESCE($3, image3), image4=COALESCE($4, image4) WHERE id = $5", [image1, image2, image3, image4, id], (err: any, res: any) => {
@@ -79,4 +88,4 @@ const updateImagesModel = (image1: any, image2: any, image3: any, image4: any, i
   })
 }
 
-module.exports = { createProductsModel, insertImagesModel, getAllProductsModel }
+module.exports = { createProductsModel, insertImagesModel, getAllProductsModel, updateProductModel }

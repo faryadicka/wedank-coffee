@@ -13,10 +13,11 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req: any, file: any) => {
+    const parse = path.parse(file.originalname)
     return {
       folder: 'wedank-images',
       format: 'jpeg',
-      public_id: `${file.fieldname + "-" + Date.now() + path.extname(file.originalname)}`,
+      public_id: `${parse.name + "-" + Date.now() + path.extname(file.originalname)}`,
     };
   }
 });
@@ -31,15 +32,15 @@ const imageFilter = function (req: any, file: any, cb: any) {
 
 const upload = multer({
   storage, fileFilter: imageFilter, limits: {
-    fileSize: 1 * 1024 * 1024 // 5MB
+    fileSize: 3 * 1024 * 1024 // 5MB
   }
 }).single('avatar')
 
 const multipleUploads = multer({
   storage, fileFilter: imageFilter, limits: {
-    fileSize: 1 * 1024 * 1024 // 5MB
+    fileSize: 3 * 1024 * 1024 // 5MB
   }
-}).array('products_image', 4)
+}).array('product_images', 4)
 
 const uploadProfile = (req: any, res: any, next: any) => {
   upload(req, res, (err: any) => {
