@@ -1,4 +1,4 @@
-export const onSuccess = (res: any, status: number = 200, message: string, data?: any, total?: any, meta?: any) => {
+export const onSuccess = (res: any, status: number = 200, message: string, data?: any, meta?: any, total?: any) => {
   res.status(status).json({
     status,
     message,
