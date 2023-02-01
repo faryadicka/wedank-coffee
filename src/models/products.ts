@@ -1,44 +1,44 @@
 const dbProducts = require("../configs/database");
 const { v4: uuid } = require("uuid");
 
-const getAllProductsModel = (page: any = '1', limit: any, order: any = 'ASC', sort: any = 'name', name: any = '', type: any, min: any, max: any) => {
+const getAllProductsModel = (page: any = '1', limit: any, order: any = 'ASC', sort: any = 'name', search: any = '', type: any, min: any, max: any) => {
   return new Promise((resolve: any, reject: any) => {
     const offset = (Number(page) - 1) * Number(limit);
     const value = []
     let SQL = "SELECT p.created_at, p.id, p.name as name, p.images_id, p.price as price, p.size as size, p.type_id as type, p.description, pi2.image1, pi2.image2, pi2.image3, pi2.image4 FROM products as p LEFT JOIN product_images as pi2 ON p.images_id = pi2.id"
-    if (min && max && type && name && order && sort && limit) {
+    if (min && max && type && search && order && sort && limit) {
       SQL += " WHERE price BETWEEN $1 AND $2 AND lower(name) LIKE lower('%' || $3 || '%') AND type_id = $4 ORDER BY " + sort + " " + order + " LIMIT $5 OFFSET $6"
-      value.push(min, max, name, type, limit, offset)
+      value.push(min, max, search, type, limit, offset)
     }
-    if (min && max && !type && !name && order && sort && limit) {
+    if (min && max && !type && !search && order && sort && limit) {
       SQL += " WHERE price BETWEEN $1 AND $2 ORDER BY " + sort + " " + order + " LIMIT $3 OFFSET $4"
       value.push(min, max, limit, offset)
     }
-    if (min && max && !type && name && order && sort && limit) {
+    if (min && max && !type && search && order && sort && limit) {
       SQL += " WHERE price BETWEEN $1 AND $2 AND lower(name) LIKE lower('%' || $3 || '%') ORDER BY " + sort + " " + order + " LIMIT $4 OFFSET $5"
-      value.push(min, max, name, limit, offset)
+      value.push(min, max, search, limit, offset)
     }
-    if (min && max && type && !name && order && sort && limit) {
+    if (min && max && type && !search && order && sort && limit) {
       SQL += " WHERE price BETWEEN $1 AND $2 AND type_id = $3 ORDER BY " + sort + " " + order + " LIMIT $4 OFFSET $5"
       value.push(min, max, type, limit, offset)
     }
-    if (type && name && order && sort && limit && !max && !min) {
+    if (type && search && order && sort && limit && !max && !min) {
       SQL += " WHERE lower(name) LIKE lower('%' || $1 || '%') AND type_id = $2 ORDER BY " + sort + " " + order + " LIMIT $3 OFFSET $4"
-      value.push(name, type, limit, offset)
+      value.push(search, type, limit, offset)
     }
-    if (type && order && sort && limit && !name && !max && !min) {
+    if (type && order && sort && limit && !search && !max && !min) {
       SQL += " WHERE type_id = $1 ORDER BY " + sort + " " + order + " LIMIT $2 OFFSET $3"
       value.push(type, limit, offset)
     }
-    if (name && order && sort && limit && !type && !max && !min) {
+    if (search && order && sort && limit && !type && !max && !min) {
       SQL += " WHERE lower(name) LIKE lower('%' || $1 || '%') ORDER BY " + sort + " " + order + " LIMIT $2 OFFSET $3"
-      value.push(name, limit, offset)
+      value.push(search, limit, offset)
     }
-    if (order && limit && sort && !name && !type && !max && !min) {
+    if (order && limit && sort && !search && !type && !max && !min) {
       SQL += " ORDER BY " + sort + " " + order + " LIMIT $1 OFFSET $2"
       value.push(limit, offset)
     }
-    if (limit && !order && !sort && !name && !type && !max && !min) {
+    if (limit && !order && !sort && !search && !type && !max && !min) {
       SQL += " LIMIT $1 OFFSET $2"
       value.push(limit, offset)
     }

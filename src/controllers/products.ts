@@ -4,8 +4,8 @@ const { generateOTP } = require('../helpers/otpGenerator')
 
 const getAllProductsController = async (req: any, res: any) => {
   try {
-    const { page, limit, order, sort, name, type, min, max } = req.query
-    const response = await getAllModel(page, limit, order, sort, name, type, Number(min), Number(max))
+    const { page, limit, order, sort, search, type, min, max } = req.query
+    const response = await getAllModel(page, limit, order, sort, search, type, Number(min), Number(max))
     const result = response.rows.map((item: any) => {
       const imgValues = Object.values(item).filter((i: any) => {
         return String(i).includes('image')
