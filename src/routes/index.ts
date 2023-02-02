@@ -9,8 +9,8 @@ const productsRouter = require("./products");
 Router.use("/auth", authRouter)
   .use("/user", usersRouter)
   .use("/products", productsRouter)
+  // .use("/transactions", transactionRoute)
 // .use("/promos", promosRouter)
-// .use("/transactions", transactionRoute)
 // .use("/notification", notifRouter);
 
 module.exports = Router;
