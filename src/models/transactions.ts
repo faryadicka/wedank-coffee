@@ -1,9 +1,8 @@
 const dbTransaction = require("../configs/database");
-const { v4: uuidTransaction } = require("uuid");
 
-const createTransactionModel = (product_id: any, user_id: any, coupon_id: any, payment_method_id: any, address: any, phone_number: any, response_midtrans: any, status: any) => {
+const createTransactionModel = (id: any, product_id: any, user_id: any, coupon_id: any, payment_method_id: any, address: any, phone_number: any, response_midtrans: any, status: any) => {
   return new Promise((resolve: any, reject: any) => {
-    const id = uuidTransaction()
+    // const id = uuidTransaction()
     dbTransaction.query("INSERT INTO transactions (id, product_id, user_id, coupon_id, payment_method_id, address, phone_number, midtrans_response, status, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, now())", [id, product_id, user_id, coupon_id, payment_method_id, address, phone_number, response_midtrans, status], (err: any, res: any) => {
       if (err) return reject(err)
       return resolve(res)
