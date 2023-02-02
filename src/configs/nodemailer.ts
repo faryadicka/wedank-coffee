@@ -4,12 +4,12 @@ const { USER_TRANSPORTER, PASS_TRANSPORTER, OAUTH_CLIENTID, OAUTH_CLIENT_SECRET,
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    type: 'OAuth2',
+    // type: 'OAuth2',
     user: USER_TRANSPORTER,
     pass: PASS_TRANSPORTER,
-    clientId: OAUTH_CLIENTID,
-    clientSecret: OAUTH_CLIENT_SECRET,
-    refreshToken: OAUTH_REFRESH_TOKEN,
+    // clientId: OAUTH_CLIENTID,
+    // clientSecret: OAUTH_CLIENT_SECRET,
+    // refreshToken: OAUTH_REFRESH_TOKEN,
   }
 })
 

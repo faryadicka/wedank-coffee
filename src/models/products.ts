@@ -42,7 +42,7 @@ const getAllProductsModel = (page: any = '1', limit: any, order: any = 'ASC', so
       SQL += " LIMIT $1 OFFSET $2"
       value.push(limit, offset)
     }
-    console.log({ SQL })
+    // console.log({ SQL })
     console.log({ offset })
     dbProducts.query(SQL, value, (err: any, res: any) => {
       if (err) return reject(err)
@@ -70,9 +70,18 @@ const insertImagesModel = (id: any, image1: any, image2: any, image3: any, image
   })
 }
 
+const getDetailProductModel = (id: any) => {
+  return new Promise((resolve: any, reject: any) => {
+    dbProducts.query("SELECT * FROM products WHERE id = $1", [id], (err: any, res: any) => {
+      if (err) return reject(err)
+      return resolve(res)
+    })
+  })
+}
+
 const updateProductModel = (name: any, price: any, size: any, type: any, description: any, id: any) => {
   return new Promise((resolve: any, reject: any) => {
-    dbProducts.query("UPDATE products SET name=COALESCE($1, name), price=COALESCE($2, price), size=COALESCE($3, size), type_id=COALESCE($4, type_id), description=COALESCE($5, description), updated_at=now() WHERE id = $6 RETURNING *", [name, price, size, type, description, id], (err: any, res: any) => {
+    dbProducts.query("UPDATE products SET name=COALESCE($1, name), price=COALESCE($2, price), size=COALESCE($3, size), type_id=COALESCE($4, type_id), description=COALESCE($5, description), updated_at=now() WHERE images_id = $6 RETURNING *", [name, price, size, type, description, id], (err: any, res: any) => {
       if (err) return reject(err)
       return resolve(res)
     })
@@ -88,4 +97,4 @@ const updateImagesModel = (image1: any, image2: any, image3: any, image4: any, i
   })
 }
 
-module.exports = { createProductsModel, insertImagesModel, getAllProductsModel, updateProductModel }
+module.exports = { createProductsModel, insertImagesModel, getAllProductsModel, updateProductModel, getDetailProductModel, updateImagesModel }

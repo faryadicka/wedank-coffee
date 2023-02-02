@@ -1,5 +1,5 @@
 import { onFailed, onSuccess } from "../helpers/response"
-const { updateProductModel: updateModel, createProductsModel: createModel, insertImagesModel: imagesModel, getAllProductsModel: getAllModel } = require('../models/products')
+const { updateImagesModel: updateImages, getDetailProductModel: detailModel, updateProductModel: updateModel, createProductsModel: createModel, insertImagesModel: imagesModel, getAllProductsModel: getAllModel } = require('../models/products')
 const { generateOTP } = require('../helpers/otpGenerator')
 
 const getAllProductsController = async (req: any, res: any) => {
@@ -33,14 +33,25 @@ const createProductsController = async (req: any, res: any) => {
 
 const updateProductController = async (req: any, res: any) => {
   try {
-    const { id } = req.params
-    const { name, price, size, type, description } = req.body
-    console.log(id)
-    const response = await updateModel(name, price, size, type, description, id)
-    onSuccess(res, 200, 'Update Product successfully', response.rows)
+    const { imagesid } = req.params
+    const { name, price, size, type_id, description } = req.body
+    const { files } = req
+    await updateModel(name, Number(price), size.toUpperCase(), Number(type_id), description, imagesid)
+    await updateImages(files[0]?.path, files[1]?.path, files[2]?.path, files[3]?.path, imagesid)
+    onSuccess(res, 200, 'Update Product successfully')
   } catch (error: any) {
     onFailed(res, 500, 'Internal Server Error', error.message)
   }
 }
 
-module.exports = { createProductsController, getAllProductsController, updateProductController }
+const getDetailProductController = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+    const response = await detailModel(id)
+    onSuccess(res, 200, 'Get Detail Product successfully', response.rows)
+  } catch (error: any) {
+    onFailed(res, 500, 'Internal Server Error', error.message)
+  }
+}
+
+module.exports = { getDetailProductController, createProductsController, getAllProductsController, updateProductController }
