@@ -1,9 +1,13 @@
 const RouterProducts = require("express").Router();
-const { createProductsController: createControl, getAllProductsController: getAllControl } = require('../controllers/products')
+const { getDetailProductController: detailControl, createProductsController: createControl, getAllProductsController: getAllControl, updateProductController: updateProductControl } = require('../controllers/products')
 const { uploadProducts } = require('../middlewares/upload')
+const { verifyToken: tokenProducts } = require('../middlewares/verify')
+
 
 RouterProducts
   .get('/', getAllControl)
-  .post('/insert-product', uploadProducts, createControl)
+  .post('/', tokenProducts, uploadProducts, createControl)
+  .patch('/:imagesid', tokenProducts, uploadProducts, updateProductControl)
+  .get('/:id', detailControl)
 
 module.exports = RouterProducts;
