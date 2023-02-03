@@ -16,3 +16,4 @@ const coreApi = new midtransClient.CoreApi({
 //   clientKey: MIDTRANS_CLIENT_KEY
 // });
 
+module.exports = { coreApi }
