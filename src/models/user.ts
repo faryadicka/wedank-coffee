@@ -22,4 +22,13 @@ const changePasswordModel = (password: any, email: any) => {
   })
 }
 
-module.exports = { updateUserModel, changePasswordModel }
+const getUserByIdModel = (id: any) => {
+  return new Promise((resolve: any, reject: any) => {
+    dbUser.query("SELECT u.id, u.email, t.midtrans_response FROM transactions t LEFT JOIN users u ON t.user_id = u.id where u.id = $1", [id], (err: any, res: any) => {
+      if (err) return reject(err)
+      return resolve(res)
+    })
+  })
+}
+
+module.exports = { updateUserModel, changePasswordModel, getUserByIdModel }

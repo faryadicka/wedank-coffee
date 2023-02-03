@@ -10,4 +10,13 @@ const createTransactionModel = (id: any, product_id: any, user_id: any, coupon_i
   })
 }
 
-module.exports = { createTransactionModel }
+const updateResponseMidtransModel = (midtransResponse: string, id: string) => {
+  return new Promise((resolve: any, reject: any) => {
+    dbTransaction.query("UPDATE transactions SET midtrans_response = $1 WHERE id = $2 RETURNING midtrans_response", [midtransResponse, id], (err: any, res: any) => {
+      if (err) return reject(err)
+      return resolve(res)
+    })
+  })
+}
+
+module.exports = { createTransactionModel, updateResponseMidtransModel }
