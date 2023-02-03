@@ -5,6 +5,6 @@ const { verifyToken: tokenOrder } = require('../middlewares/verify')
 
 RouterOrder
   .post('/', tokenOrder, orderController)
-  .patch('/:id', tokenOrder, updateMidtransControl)
+  .post('/notification', tokenOrder, updateMidtransControl)
 
 module.exports = RouterOrder
