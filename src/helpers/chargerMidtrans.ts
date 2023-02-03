@@ -74,4 +74,8 @@ const chargerMidtrans = async (type: any, orderId: any, amount: any, name: any, 
   return core.charge(parameter);
 }
 
-module.exports = { chargerMidtrans }
+const notificationMidtrans = (response: any) => {
+  return core.transaction.notification(response)
+}
+
+module.exports = { chargerMidtrans, notificationMidtrans }

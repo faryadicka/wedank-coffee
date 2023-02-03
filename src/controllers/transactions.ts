@@ -1,6 +1,7 @@
 import { onFailed, onSuccess } from "../helpers/response"
-const { createTransactionModel: createModel } = require('../models/transactions')
-const { chargerMidtrans } = require("../helpers/chargerMidtrans")
+const { createTransactionModel: createModel, updateResponseMidtransModel: updateMidtransModel } = require('../models/transactions')
+const { getUserByIdModel } = require('../models/user')
+const { chargerMidtrans, notificationMidtrans } = require("../helpers/chargerMidtrans")
 const { v4: uuidTransaction } = require("uuid");
 
 const createTransactionController = async (req: any, res: any) => {
@@ -19,4 +20,18 @@ const createTransactionController = async (req: any, res: any) => {
   }
 }
 
-module.exports = { createTransactionController }
+const updateResponseMidtransController = async (req: any, res: any) => {
+  try {
+    const { id } = req.userInfo
+    const user = await getUserByIdModel(id)
+    const { midtrans_response } = user.rows[0]
+    const parseResponse = JSON.parse(midtrans_response)
+    const responseNotif = await notificationMidtrans(parseResponse)
+    const response = await updateMidtransModel(JSON.stringify(responseNotif), parseResponse.order_id)
+    onSuccess(res, 200, 'Success', JSON.parse(response.rows[0]))
+  } catch (error: any) {
+    onFailed(res, 500, 'InternatServer Error', error.message)
+  }
+}
+
+module.exports = { createTransactionController, updateResponseMidtransController }
