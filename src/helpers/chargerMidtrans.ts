@@ -70,24 +70,6 @@ const chargerMidtrans = async (type: any, orderId: any, amount: any, name: any, 
     } catch (error: any) {
       return error.message
     }
-    // core.cardToken(parameterToken)
-    //   .then((cardTokenResponse: any) => {
-    //     let cardToken = cardTokenResponse.token_id;
-    //     parameter = {
-    //       ...parameter,
-    //       "credit_card": {
-    //         "token_id": cardToken,
-    //         "bank": "bni",
-    //         "installment_term": 6,
-    //         "bins": ["4811", "5233"],
-    //         "type": "authorize",
-    //         "save_token_id": true
-    //       }
-    //     };
-    //     return core.charge(parameter);
-    //   }).catch((err: any) => {
-    //     console.log(err.message)
-    //   })
   }
   return core.charge(parameter);
 }
