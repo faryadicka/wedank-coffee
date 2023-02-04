@@ -43,7 +43,7 @@ db.connect()
       });
     });
 
-    app.listen(process.env.PORT_EXPRESS, () => {
+    app.listen(PORT, () => {
       console.log(`PORT listening on ${PORT}`);
     });
   })
