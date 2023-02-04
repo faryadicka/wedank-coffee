@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const PORT = 4000;
+const PORT = process.env.PORT || 5000;
 const db = require("./src/configs/database");
 const mainRoute = require('./src/routes/index')
 const clientRedis = require('./src/configs/redis')
@@ -43,7 +43,7 @@ db.connect()
       });
     });
 
-    app.listen(PORT, () => {
+    app.listen(process.env.PORT_EXPRESS, () => {
       console.log(`PORT listening on ${PORT}`);
     });
   })
