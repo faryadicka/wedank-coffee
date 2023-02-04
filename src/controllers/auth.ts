@@ -21,7 +21,7 @@ const registerUserController = async (req: any, res: any) => {
     onSuccess(res, 200, 'Register Successfully, please check your email to verify your account!')
   } catch (error: any) {
     console.log(error)
-    onFailed(res, 500, 'Internal Server Error', error)
+    onFailed(res, 500, 'Internal Server Error', error.message)
   }
 }
 
@@ -36,7 +36,7 @@ const verifyAccountController = async (req: any, res: any) => {
     onFailed(res, 404, "OTP isn't match")
   } catch (error: any) {
     console.log(error)
-    onFailed(res, 500, error)
+    onFailed(res, 500, 'Internal Server Error', error.message)
   }
 }
 
@@ -97,6 +97,7 @@ const forgotPassController = async (req: any, res: any) => {
     const splitUrl = encodeUrl.split('#-&')
     const email = await clientValue.get('email')
     const pass = await bcrypt.hash(newPassword, 10)
+    // console.log(splitUrl)
     const result = await forgotPass(email, pass, splitUrl[0], splitUrl[1])
     if (result.rowCount === 1) {
       return onSuccess(res, 200, 'Reset password successfuly')
