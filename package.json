@@ -5,9 +5,9 @@
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "startDev": "nodemon index.ts",
+    "start": "nodemon index.ts",
     "startEslint": "npx eslint index.ts",
-    "start": "node index.ts"
+    "start1": "node index.ts"
   },
   "keywords": [],
   "author": "",
