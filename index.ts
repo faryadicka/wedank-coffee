@@ -43,7 +43,7 @@ db.connect()
       });
     });
 
-    app.listen(PORT, '0.0.0.0', () => {
+    app.listen(PORT, () => {
       console.log(`PORT listening on ${PORT}`);
     });
   })
