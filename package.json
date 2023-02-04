@@ -25,11 +25,11 @@
     "nodemailer": "^6.9.0",
     "pg": "^8.8.0",
     "redis": "^4.5.1",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "nodemon": "^2.0.20"
   },
   "devDependencies": {
     "@types/node": "^18.11.18",
-    "eslint": "^8.32.0",
-    "nodemon": "^2.0.20"
+    "eslint": "^8.32.0"
   }
 }
