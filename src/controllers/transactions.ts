@@ -1,7 +1,6 @@
 import { onFailed, onSuccess } from "../helpers/response"
 const { createTransactionModel: createModel, updateResponseMidtransModel: updateMidtransModel } = require('../models/transactions')
-const { getUserByIdModel } = require('../models/user')
-const { chargerMidtrans, notificationMidtrans } = require("../helpers/chargerMidtrans")
+const { chargerMidtrans, notificationMidtrans } = require("../helpers/coreApiMidtrans")
 const { v4: uuidTransaction } = require("uuid");
 
 const createTransactionController = async (req: any, res: any) => {
@@ -30,5 +29,14 @@ const notificationMidtransController = async (req: any, res: any) => {
     onFailed(res, 500, 'Internal Server Error', error)
   }
 }
+
+const updateStatusTransactionCtontroller = async () => {
+  try {
+
+  } catch (error: any) {
+
+  }
+}
+
 
 module.exports = { createTransactionController, notificationMidtransController }
