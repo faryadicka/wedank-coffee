@@ -26,6 +26,7 @@ const notificationMidtransController = async (req: any, res: any) => {
     const user = await getUserByIdModel(id)
     const { midtrans_response } = user.rows[0]
     const parseResponse = JSON.parse(midtrans_response)
+    console.log(req.body)
     const responseNotif = await notificationMidtrans(req.body)
     const response = await updateMidtransModel(JSON.stringify(responseNotif), parseResponse.order_id)
     onSuccess(res, 200, 'Success', JSON.parse(response.rows[0]))
