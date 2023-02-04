@@ -20,13 +20,13 @@ const createTransactionController = async (req: any, res: any) => {
   }
 }
 
-const updateResponseMidtransController = async (req: any, res: any) => {
+const notificationMidtransController = async (req: any, res: any) => {
   try {
     const { id } = req.userInfo
     const user = await getUserByIdModel(id)
     const { midtrans_response } = user.rows[0]
     const parseResponse = JSON.parse(midtrans_response)
-    const responseNotif = await notificationMidtrans(parseResponse)
+    const responseNotif = await notificationMidtrans(req.body)
     const response = await updateMidtransModel(JSON.stringify(responseNotif), parseResponse.order_id)
     onSuccess(res, 200, 'Success', JSON.parse(response.rows[0]))
   } catch (error: any) {
@@ -34,4 +34,4 @@ const updateResponseMidtransController = async (req: any, res: any) => {
   }
 }
 
-module.exports = { createTransactionController, updateResponseMidtransController }
+module.exports = { createTransactionController, notificationMidtransController }
