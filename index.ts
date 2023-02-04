@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const PORT = 5000;
+const PORT = 4000;
 const db = require("./src/configs/database");
 const mainRoute = require('./src/routes/index')
 const clientRedis = require('./src/configs/redis')
