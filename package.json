@@ -5,10 +5,9 @@
   "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node index.ts",
+    "startDev": "nodemon index.ts",
     "startEslint": "npx eslint index.ts",
-    "start1": "node index.ts",
-    "build": "tsc"
+    "start": "node index.ts"
   },
   "keywords": [],
   "author": "",
@@ -26,11 +25,11 @@
     "nodemailer": "^6.9.0",
     "pg": "^8.8.0",
     "redis": "^4.5.1",
-    "uuid": "^9.0.0",
-    "nodemon": "^2.0.20",
-    "@types/node": "^18.11.18"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "eslint": "^8.32.0"
+    "@types/node": "^18.11.18",
+    "eslint": "^8.32.0",
+    "nodemon": "^2.0.20"
   }
 }
