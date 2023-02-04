@@ -5,6 +5,6 @@ const { verifyToken: tokenOrder } = require('../middlewares/verify')
 
 RouterOrder
   .post('/', tokenOrder, orderController)
-  .post('/notification', tokenOrder, notificationMidtransController) // attach this route to dashboard midtrans to get notifications.
+  .post('/notification', notificationMidtransController) // attach this route to dashboard midtrans to get notifications.
 
 module.exports = RouterOrder
