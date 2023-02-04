@@ -11,7 +11,7 @@ const createTransactionController = async (req: any, res: any) => {
     if (paymentMethodType !== 'cod') {
       const responseMidtrans = await chargerMidtrans(paymentMethodType, id, total, name, address, phoneNumber, bankName, countryId, acquirer, cardNumber, cardExpMonth, cardExpYear, cardCvv)
       const response = await createModel(id, productId, userId, couponId, paymentMethodType, address, phoneNumber, JSON.stringify(responseMidtrans), status, total)
-      return onSuccess(res, 200, 'Payment Successfuly, please complete step for finish your order!', response)
+      return onSuccess(res, 200, 'Payment Successfuly, please complete step for finish your order!', response.rows[0])
     }
     const response = await createModel(id, productId, userId, couponId, paymentMethodType, address, phoneNumber, 'NULL', status, total)
     onSuccess(res, 200, 'Payment Successfuly, please complete step for finish your order!', response)
