@@ -22,16 +22,12 @@ const createTransactionController = async (req: any, res: any) => {
 
 const notificationMidtransController = async (req: any, res: any) => {
   try {
-    const { id } = req.userInfo
-    const user = await getUserByIdModel(id)
-    const { midtrans_response } = user.rows[0]
-    const parseResponse = JSON.parse(midtrans_response)
-    console.log(req.body)
     const responseNotif = await notificationMidtrans(req.body)
-    const response = await updateMidtransModel(JSON.stringify(responseNotif), parseResponse.order_id)
-    onSuccess(res, 200, 'Success', JSON.parse(response.rows[0]))
+    console.log(responseNotif.order_id)
+    const response = await updateMidtransModel(JSON.stringify(responseNotif), responseNotif.order_id)
+    onSuccess(res, 200, 'Success', response.rows[0])
   } catch (error: any) {
-    onFailed(res, 500, 'InternatServer Error', error.message)
+    onFailed(res, 500, 'Internal Server Error', error)
   }
 }
 
