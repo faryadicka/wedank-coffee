@@ -1,9 +1,9 @@
 const dbTransaction = require("../configs/database");
 
-const createTransactionModel = (id: string, product_id: string, user_id: string, coupon_id: string, payment_method_type: string, address: string, phone_number: string, response_midtrans: string, status: string, total: string) => {
+const createTransactionModel = (id: string, product_id: string, user_id: string, coupon_id: string, payment_method_type: string, address: string, phone_number: string, response_midtrans: string, status: string, total: string, size: string) => {
   return new Promise((resolve: any, reject: any) => {
     // const id = uuidTransaction()
-    dbTransaction.query("INSERT INTO transactions (id, product_id, user_id, coupon_id, payment_method_type, address, phone_number, midtrans_response, status, total, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, now()) RETURNING *", [id, product_id, user_id, coupon_id, payment_method_type, address, phone_number, response_midtrans, status, total], (err: any, res: any) => {
+    dbTransaction.query("INSERT INTO transactions (id, product_id, user_id, coupon_id, payment_method_type, address, phone_number, midtrans_response, status, total, size, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, now()) RETURNING *", [id, product_id, user_id, coupon_id, payment_method_type, address, phone_number, response_midtrans, status, total, size], (err: any, res: any) => {
       if (err) return reject(err)
       return resolve(res)
     })

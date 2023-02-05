@@ -21,12 +21,13 @@ const getAllProductsController = async (req: any, res: any) => {
 const createProductsController = async (req: any, res: any) => {
   try {
     const images_id = generateOTP()
-    const { name, price, size, type_id, description } = req.body
+    const { name, price, size, typeId, description } = req.body
     const { files } = req
-    if (files.path) {
-      await createModel(name, Number(price), size.toUpperCase(), type_id, description, images_id)
+    // console.log(files)
+    if (files.length > 0) {
+      await createModel(name, Number(price), size.toUpperCase(), typeId, description, images_id)
       await imagesModel(images_id, files[0].path, files[1].path, files[2].path, files[3].path)
-      onSuccess(res, 200, 'Create product successfully')
+      return onSuccess(res, 200, 'Create product successfully')
     }
     onFailed(res, 500, 'Please upload product images!!', null)
   } catch (error: any) {
