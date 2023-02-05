@@ -19,13 +19,24 @@ const updateResponseMidtransModel = (midtransResponse: string, id: string) => {
   })
 }
 
-const updateStatusTransactionModel = (status: string) => {
+const updateStatusTransactionModel = (status: string, id: string) => {
   return new Promise((resolve: any, reject: any) => {
-    dbTransaction.query("UPDATE transaction SET status = $1 WHERE id = $2", [status], (err: any, res: any) => {
+    dbTransaction.query("UPDATE transactions SET status = $1 WHERE id = $2 RETURNING *", [status, id], (err: any, res: any) => {
       if (err) return reject(err)
       return resolve(res)
     })
   })
 }
 
-module.exports = { createTransactionModel, updateResponseMidtransModel, updateStatusTransactionModel }
+const softDeleteTransactionModel = (id: string) => {
+  return new Promise((resolve: any, reject: any) => {
+    const SQL = "UPDATE transactions SET status = 'deleted' WHERE id IN (" + id + ") RETURNING *"
+    // console.log(SQL)
+    dbTransaction.query(SQL, (err: any, res: any) => {
+      if (err) return reject(err)
+      return resolve(res)
+    })
+  })
+}
+
+module.exports = { createTransactionModel, updateResponseMidtransModel, updateStatusTransactionModel, softDeleteTransactionModel }
