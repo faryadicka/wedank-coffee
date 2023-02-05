@@ -8,10 +8,10 @@ const createTransactionController = async (req: any, res: any) => {
   try {
     const id = generateOTP()
     const { id: userId } = req.userInfo
-    const { paymentMethodType, total, name, address, phoneNumber, bankName, countryId, acquirer, productId, couponId, status, cardNumber, cardExpMonth, cardExpYear, cardCvv } = req.body
+    const { size, paymentMethodType, total, name, address, phoneNumber, bankName, countryId, acquirer, productId, couponId, status, cardNumber, cardExpMonth, cardExpYear, cardCvv } = req.body
     if (paymentMethodType !== 'cod') {
       const responseMidtrans = await chargerMidtrans(paymentMethodType, id, total, name, address, phoneNumber, bankName, countryId, acquirer, cardNumber, cardExpMonth, cardExpYear, cardCvv)
-      const response = await createTransactionModel(id, productId, userId, couponId, paymentMethodType, address, phoneNumber, JSON.stringify(responseMidtrans), status, total)
+      const response = await createTransactionModel(id, productId, userId, couponId, paymentMethodType, address, phoneNumber, JSON.stringify(responseMidtrans), status, total, size)
       return onSuccess(res, 200, 'Payment Successfuly, please complete step for finish your order!', response.rows[0])
     }
     const response = await createTransactionModel(id, productId, userId, couponId, paymentMethodType, address, phoneNumber, 'NULL', status, total)
