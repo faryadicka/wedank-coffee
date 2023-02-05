@@ -1,5 +1,5 @@
 import { onFailed, onSuccess } from "../helpers/response"
-const { softDeleteTransactionModel, updateStatusTransactionModel, createTransactionModel, updateResponseMidtransModel } = require('../models/transactions')
+const { getAllTransactionByUserModel, softDeleteTransactionModel, updateStatusTransactionModel, createTransactionModel, updateResponseMidtransModel } = require('../models/transactions')
 const { chargerMidtrans, notificationMidtrans } = require("../helpers/coreApiMidtrans")
 const { v4: uuidTransaction } = require("uuid");
 const { generateOTP } = require('../helpers/otpGenerator')
@@ -7,7 +7,8 @@ const { generateOTP } = require('../helpers/otpGenerator')
 const createTransactionController = async (req: any, res: any) => {
   try {
     const id = generateOTP()
-    const { paymentMethodType, total, name, address, phoneNumber, bankName, countryId, acquirer, productId, userId, couponId, status, cardNumber, cardExpMonth, cardExpYear, cardCvv } = req.body
+    const { id: userId } = req.userInfo
+    const { paymentMethodType, total, name, address, phoneNumber, bankName, countryId, acquirer, productId, couponId, status, cardNumber, cardExpMonth, cardExpYear, cardCvv } = req.body
     if (paymentMethodType !== 'cod') {
       const responseMidtrans = await chargerMidtrans(paymentMethodType, id, total, name, address, phoneNumber, bankName, countryId, acquirer, cardNumber, cardExpMonth, cardExpYear, cardCvv)
       const response = await createTransactionModel(id, productId, userId, couponId, paymentMethodType, address, phoneNumber, JSON.stringify(responseMidtrans), status, total)
@@ -53,4 +54,14 @@ const softDeleteTransactionController = async (req: any, res: any) => {
   }
 }
 
-module.exports = { softDeleteTransactionController, createTransactionController, notificationMidtransController, updateStatusTransactionController }
+const getAllTransactionByUserController = async (req: any, res: any) => {
+  try {
+    const { id } = req.userInfo
+    const response = await getAllTransactionByUserModel(id)
+    onSuccess(res, 200, 'Get All Transaction Successfully', response.rows)
+  } catch (error: any) {
+    onFailed(res, 500, 'Internal Server Error', error.message)
+  }
+}
+
+module.exports = { getAllTransactionByUserController, softDeleteTransactionController, createTransactionController, notificationMidtransController, updateStatusTransactionController }

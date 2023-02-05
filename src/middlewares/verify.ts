@@ -10,8 +10,8 @@ const verifyToken = async (req: any, res: any, next: any) => {
     if (err) { return fail(res, 500, err) }
     const { id, email, role, otp } = decode
     req.userInfo = { id, email, role, otp }
+    next()
   })
-  next()
 }
 
 module.exports = { verifyToken }

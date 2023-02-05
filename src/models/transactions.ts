@@ -39,4 +39,14 @@ const softDeleteTransactionModel = (id: string) => {
   })
 }
 
-module.exports = { createTransactionModel, updateResponseMidtransModel, updateStatusTransactionModel, softDeleteTransactionModel }
+const getAllTransactionByUserModel = (id: any) => {
+  return new Promise((resolve: any, reject: any) => {
+    const SQL = "SELECT * FROM transactions WHERE user_id LIKE $1"
+    dbTransaction.query(SQL, [id], (err: any, res: any) => {
+      if (err) return reject(err)
+      return resolve(res)
+    })
+  })
+}
+
+module.exports = { getAllTransactionByUserModel, createTransactionModel, updateResponseMidtransModel, updateStatusTransactionModel, softDeleteTransactionModel }
