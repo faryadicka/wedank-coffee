@@ -42,8 +42,6 @@ const getAllProductsModel = (page: any = '1', limit: any, order: any = 'ASC', so
       SQL += " LIMIT $1 OFFSET $2"
       value.push(limit, offset)
     }
-    console.log({ SQL })
-    // console.log({ offset })
     dbProducts.query(SQL, value, (err: any, res: any) => {
       if (err) return reject(err)
       return resolve(res)

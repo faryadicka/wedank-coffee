@@ -14,7 +14,6 @@ const getAllProductsController = async (req: any, res: any) => {
       })
       return { id: item.id, name: item.name, price: item.price, size: item.size, type_id: item.type_id, created_at: item.created_at, description: item.description, image: imgValues }
     })
-    console.log(req.query)
     const total = Number(totalResponse.rows[0]['total'])
     onSuccess(res, 200, 'Get all products successfully', result, pagination(page, limit, total, req.query, '/products'))
   } catch (error: any) {
