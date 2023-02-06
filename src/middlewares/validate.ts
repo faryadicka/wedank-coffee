@@ -1,3 +1,4 @@
+
 const dbmdw = require('../configs/database')
 const bcryptVerify = require('bcrypt')
 
@@ -27,4 +28,8 @@ const checkOTP = (otpCode: any) => {
 const checkPassword = async (password: any, hashedPass: any) => {
   return await bcryptVerify.compare(password, hashedPass)
 }
-module.exports = { checkDuplicate, checkOTP, checkPassword }
+
+
+
+module.exports = { checkDuplicate, checkOTP, checkPassword, }
+

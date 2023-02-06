@@ -91,18 +91,21 @@ const resetPassController = async (req: any, res: any) => {
 
 const forgotPassController = async (req: any, res: any) => {
   try {
-    const { newPassword } = req.body
-    const { secret } = req.params
-    const encodeUrl = atob(secret)
-    const splitUrl = encodeUrl.split('#-&')
-    const email = await clientValue.get('email')
-    const pass = await bcrypt.hash(newPassword, 10)
-    // console.log(splitUrl)
-    const result = await forgotPass(email, pass, splitUrl[0], splitUrl[1])
-    if (result.rowCount === 1) {
-      return onSuccess(res, 200, 'Reset password successfuly')
+    const { newPassword, confirmPassword } = req.body
+    if (confirmPassword === newPassword) {
+      const { secret } = req.params
+      const encodeUrl = atob(secret)
+      const splitUrl = encodeUrl.split('#-&')
+      const email = await clientValue.get('email')
+      const pass = await bcrypt.hash(confirmPassword, 10)
+      const result = await forgotPass(email, pass, splitUrl[0], splitUrl[1])
+      if (result.rowCount === 1) {
+        return onSuccess(res, 200, 'Reset password successfuly')
+      }
+    } else {
+      return onFailed(res, 406, 'New password and confirm password doesn`t match', null)
     }
-    onFailed(res, 400, 'Error code, better repeat the previous step')
+    onFailed(res, 400, 'Error code, better repeat the previous step', null)
   } catch (error: any) {
     onFailed(res, 500, error.message, error)
   }
