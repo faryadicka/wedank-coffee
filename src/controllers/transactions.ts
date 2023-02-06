@@ -46,8 +46,9 @@ const updateStatusTransactionController = async (req: any, res: any) => {
 const softDeleteTransactionController = async (req: any, res: any) => {
   try {
     const { id } = req.body
+    const { id: userId } = req.userInfo
     // console.log(id)
-    const response = await softDeleteTransactionModel(id)
+    const response = await softDeleteTransactionModel(id, userId)
     onSuccess(res, 200, 'Soft delete data successfully', response.rows)
   } catch (error: any) {
     onFailed(res, 500, 'Internal Server Error', error.message)

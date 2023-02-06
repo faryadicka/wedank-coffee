@@ -1,3 +1,4 @@
+import path = require("path")
 import { onFailed, onSuccess } from "../helpers/response"
 const { updateImagesModel: updateImages, getDetailProductModel: detailModel, updateProductModel: updateModel, createProductsModel: createModel, insertImagesModel: imagesModel, getAllProductsModel: getAllModel } = require('../models/products')
 const { generateOTP } = require('../helpers/otpGenerator')
@@ -12,7 +13,7 @@ const getAllProductsController = async (req: any, res: any) => {
       })
       return { id: item.id, name: item.name, price: item.price, size: item.size, type_id: item.type_id, created_at: item.created_at, description: item.description, image: imgValues }
     })
-    onSuccess(res, 200, 'Get all products successfully', result)
+    onSuccess(res, 200, 'Get all products successfully', result, { nextPage: path.basename })
   } catch (error: any) {
     onFailed(res, 500, 'Internal Server Error', error.message)
   }
