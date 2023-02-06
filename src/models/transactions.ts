@@ -28,11 +28,11 @@ const updateStatusTransactionModel = (status: string, id: string) => {
   })
 }
 
-const softDeleteTransactionModel = (id: string) => {
+const softDeleteTransactionModel = (id: string, userId: string) => {
   return new Promise((resolve: any, reject: any) => {
-    const SQL = "UPDATE transactions SET status = 'deleted' WHERE id IN (" + id + ") RETURNING *"
+    const SQL = "UPDATE transactions SET status = 'deleted' WHERE id IN (" + id + ") AND WHERE user_id LIKE $1 RETURNING *"
     // console.log(SQL)
-    dbTransaction.query(SQL, (err: any, res: any) => {
+    dbTransaction.query(SQL, [userId], (err: any, res: any) => {
       if (err) return reject(err)
       return resolve(res)
     })

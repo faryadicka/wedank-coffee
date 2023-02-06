@@ -1,18 +1,22 @@
 import { onFailed, onSuccess } from "../helpers/response"
-const { updateImagesModel: updateImages, getDetailProductModel: detailModel, updateProductModel: updateModel, createProductsModel: createModel, insertImagesModel: imagesModel, getAllProductsModel: getAllModel } = require('../models/products')
+const { getProductsTotalModel, updateImagesModel: updateImages, getDetailProductModel: detailModel, updateProductModel: updateModel, createProductsModel: createModel, insertImagesModel: imagesModel, getAllProductsModel: getAllModel } = require('../models/products')
 const { generateOTP } = require('../helpers/otpGenerator')
+const { pagination } = require('../helpers/pagination')
 
 const getAllProductsController = async (req: any, res: any) => {
   try {
     const { page, limit, order, sort, search, type, min, max } = req.query
-    const response = await getAllModel(page, limit, order, sort, search, type, Number(min), Number(max))
+    const totalResponse = await getProductsTotalModel()
+    const response = await getAllModel(page, limit, order, sort, search, type, min, max)
     const result = response.rows.map((item: any) => {
       const imgValues = Object.values(item).filter((i: any) => {
         return String(i).includes('image')
       })
       return { id: item.id, name: item.name, price: item.price, size: item.size, type_id: item.type_id, created_at: item.created_at, description: item.description, image: imgValues }
     })
-    onSuccess(res, 200, 'Get all products successfully', result)
+    console.log(req.query)
+    const total = Number(totalResponse.rows[0]['total'])
+    onSuccess(res, 200, 'Get all products successfully', result, pagination(page, limit, total, req.query, '/products'))
   } catch (error: any) {
     onFailed(res, 500, 'Internal Server Error', error.message)
   }

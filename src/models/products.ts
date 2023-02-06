@@ -42,9 +42,18 @@ const getAllProductsModel = (page: any = '1', limit: any, order: any = 'ASC', so
       SQL += " LIMIT $1 OFFSET $2"
       value.push(limit, offset)
     }
-    // console.log({ SQL })
+    console.log({ SQL })
     // console.log({ offset })
     dbProducts.query(SQL, value, (err: any, res: any) => {
+      if (err) return reject(err)
+      return resolve(res)
+    })
+  })
+}
+
+const getProductsTotalModel = () => {
+  return new Promise((resolve: any, reject: any) => {
+    dbProducts.query("SELECT COUNT(*) AS total FROM products", (err: any, res: any) => {
       if (err) return reject(err)
       return resolve(res)
     })
@@ -97,4 +106,4 @@ const updateImagesModel = (image1: any, image2: any, image3: any, image4: any, i
   })
 }
 
-module.exports = { createProductsModel, insertImagesModel, getAllProductsModel, updateProductModel, getDetailProductModel, updateImagesModel }
+module.exports = { getProductsTotalModel, createProductsModel, insertImagesModel, getAllProductsModel, updateProductModel, getDetailProductModel, updateImagesModel }
