@@ -10,7 +10,8 @@ const pagination = (page: any, limit: any, total: any, query: object, endpoint: 
     nextPage: Number(page) < totalPage ? `${process.env.HOST}${endpoint}${next}` : null,
     prevPage: Number(page) > 1 ? `${process.env.HOST}${endpoint}${prev}` : null,
     totalPage,
-    currentpage: Number(page)
+    currentpage: Number(page),
+    totalData: total
   }
 }
 

@@ -1,7 +1,7 @@
 const dbProducts = require("../configs/database");
 const { v4: uuid } = require("uuid");
 
-const getAllProductsModel = (page: any = '1', limit: any, order: any = 'ASC', sort: any = 'name', search: any = '', type: any, min: any, max: any) => {
+const getAllProductsModel = (page: any = '1', limit: any = '12', order: any = 'ASC', sort: any = 'name', search: any = '', type: any, min: any, max: any) => {
   return new Promise((resolve: any, reject: any) => {
     const offset = (Number(page) - 1) * Number(limit);
     const value = []
@@ -49,10 +49,24 @@ const getAllProductsModel = (page: any = '1', limit: any, order: any = 'ASC', so
   })
 }
 
-const getProductsTotalModel = () => {
+const getProductsTotalModel = (limit: any, order: any, sort: any, search: any, type: any, min: any, max: any) => {
   return new Promise((resolve: any, reject: any) => {
     let SQL = "SELECT COUNT(*) AS total FROM products"
-    dbProducts.query(SQL, (err: any, res: any) => {
+    const value = []
+    if (min && max && type && search && order && sort && limit) {
+      SQL += " WHERE price BETWEEN $1 AND $2 AND lower(name) LIKE lower('%' || $3 || '%') AND type_id = $4"
+      value.push(min, max, search, type)
+    }
+    if (min && max && !type && !search && order && sort && limit) {
+      SQL += " WHERE price BETWEEN $1 AND $2"
+      value.push(min, max)
+    }
+    if (min && max && !type && search && order && sort && limit) {
+      SQL += " WHERE price BETWEEN $1 AND $2 AND lower(name) LIKE lower('%' || $3 || '%')"
+      value.push(min, max, search)
+    }
+    console.log(SQL)
+    dbProducts.query(SQL, value, (err: any, res: any) => {
       if (err) return reject(err)
       return resolve(res)
     })

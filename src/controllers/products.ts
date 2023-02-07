@@ -6,7 +6,7 @@ const { pagination } = require('../helpers/pagination')
 const getAllProductsController = async (req: any, res: any) => {
   try {
     const { page, limit, order, sort, search, type, min, max } = req.query
-    const totalResponse = await getProductsTotalModel()
+    const totalResponse = await getProductsTotalModel(limit, order, sort, search, type, min, max)
     const response = await getAllModel(page, limit, order, sort, search, type, min, max)
     const result = response.rows.map((item: any) => {
       const imgValues = Object.values(item).filter((i: any) => {
