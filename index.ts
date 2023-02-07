@@ -5,8 +5,9 @@ const PORT = process.env.PORT || 5000;
 const db = require("./src/configs/database");
 const mainRoute = require('./src/routes/index')
 const clientRedis = require('./src/configs/redis')
+const { socketIoOn } = require('./src/configs/socket.io')
 
-const app = express();
+export const app = express();
 
 db.connect()
   .then(() => {
@@ -26,6 +27,8 @@ db.connect()
     };
 
     app.use(cors(corsOptions));
+
+    socketIoOn()
 
     app.get("/", (req: any, res: any) => {
       res.status(200).json({
