@@ -51,7 +51,8 @@ const getAllProductsModel = (page: any = '1', limit: any, order: any = 'ASC', so
 
 const getProductsTotalModel = () => {
   return new Promise((resolve: any, reject: any) => {
-    dbProducts.query("SELECT COUNT(*) AS total FROM products", (err: any, res: any) => {
+    let SQL = "SELECT COUNT(*) AS total FROM products"
+    dbProducts.query(SQL, (err: any, res: any) => {
       if (err) return reject(err)
       return resolve(res)
     })
