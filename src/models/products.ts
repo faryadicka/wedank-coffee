@@ -46,7 +46,7 @@ const getAllProductsModel = (page: any = '1', limit: any = '12', order: any = 'A
       if (err) return reject(err)
       return resolve(res)
     })
-  })
+  })   
 }
 
 const getProductsTotalModel = (limit: any, order: any, sort: any, search: any, type: any, min: any, max: any) => {
@@ -64,6 +64,22 @@ const getProductsTotalModel = (limit: any, order: any, sort: any, search: any, t
     if (min && max && !type && search && order && sort && limit) {
       SQL += " WHERE price BETWEEN $1 AND $2 AND lower(name) LIKE lower('%' || $3 || '%')"
       value.push(min, max, search)
+    }
+    if (min && max && type && !search && order && sort && limit) {
+      SQL += " WHERE price BETWEEN $1 AND $2 AND type_id = $3"
+      value.push(min, max, type)
+    }
+    if (type && search && order && sort && limit && !max && !min) {
+      SQL += " WHERE lower(name) LIKE lower('%' || $1 || '%') AND type_id = $2"
+      value.push(search, type)
+    }
+    if (type && order && sort && limit && !search && !max && !min) {
+      SQL += " WHERE type_id = $1 "
+      value.push(type)
+    }
+    if (search && order && sort && limit && !type && !max && !min) {
+      SQL += " WHERE lower(name) LIKE lower('%' || $1 || '%')"
+      value.push(search)
     }
     console.log(SQL)
     dbProducts.query(SQL, value, (err: any, res: any) => {
