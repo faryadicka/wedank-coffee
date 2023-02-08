@@ -1,8 +1,9 @@
 import { onFailed, onSuccess } from "../helpers/response"
 const { getAllTransactionByUserModel, softDeleteTransactionModel, updateStatusTransactionModel, createTransactionModel, updateResponseMidtransModel } = require('../models/transactions')
 const { chargerMidtrans, notificationMidtrans } = require("../helpers/coreApiMidtrans")
-const { v4: uuidTransaction } = require("uuid");
+// const { v4: uuidTransaction } = require("uuid");
 const { generateOTP } = require('../helpers/otpGenerator')
+
 
 const createTransactionController = async (req: any, res: any) => {
   try {
