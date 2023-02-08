@@ -37,6 +37,23 @@ const inputRegisterValidate = (req: any, res: any, next: any) => {
   next()
 }
 
+const inputCreateUserValidate = (req: any, res: any, next: any) => {
+  const { email, password, phoneNumber, firstName, lastName } = req.body
+  if (!email || email.length === 0) {
+    return onFailed(res, 403, 'Email field can`t be empty!', null)
+  }
+  if (!email.includes('@')) {
+    return onFailed(res, 403, 'Email invalid, please input your email correctly', null)
+  }
+  if (!password || password.length === 0) {
+    return onFailed(res, 403, 'Password field can`t be empty!', null)
+  }
+  if (password.length < 8) {
+    return onFailed(res, 403, 'Minimum password characters are at least 8 characters', null)
+  }
+  next()
+}
+
 const inputResetValidate = (req: any, res: any, next: any) => {
   const { email } = req.body
   if (!email || email.length === 0) {
@@ -48,4 +65,4 @@ const inputResetValidate = (req: any, res: any, next: any) => {
   next()
 }
 
-module.exports = { inputLoginValidate, inputRegisterValidate, inputResetValidate }
+module.exports = { inputCreateUserValidate, inputLoginValidate, inputRegisterValidate, inputResetValidate }
