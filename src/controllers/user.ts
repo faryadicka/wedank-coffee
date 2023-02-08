@@ -1,8 +1,17 @@
 import { onFailed, onSuccess } from "../helpers/response"
-const { updateUserModel: updateModel, changePasswordModel: changePassModel } = require('../models/user')
+const { getAllUserModel, updateUserModel: updateModel, changePasswordModel: changePassModel } = require('../models/user')
 const { checkPassword, checkDuplicate } = require('../middlewares/validate')
 const bcryptUser = require('bcrypt')
 
+
+const getAllusersController = async (req: any, res: any) => {
+  try {
+    const response = await getAllUserModel()
+    onSuccess(res, 200, 'Get All Users Successfully', response.rows)
+  } catch (error: any) {
+    onFailed(res, 500, 'Internal Server Error', error.message)
+  }
+}
 
 const getUserController = async (req: any, res: any) => {
   try {
@@ -14,7 +23,7 @@ const getUserController = async (req: any, res: any) => {
     }
     onFailed(res, 400, 'User not found', null)
   } catch (error: any) {
-    onFailed(res, 500, 'User not found', error.message)
+    onFailed(res, 500, 'Internal Server Error', error.message)
   }
 }
 
@@ -51,4 +60,4 @@ const changePasswordController = async (req: any, res: any) => {
   }
 }
 
-module.exports = { updateUserController, changePasswordController, getUserController }
+module.exports = { updateUserController, changePasswordController, getUserController, getAllusersController }

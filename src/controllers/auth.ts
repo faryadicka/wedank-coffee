@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const { onFailed, onSuccess } = require("../helpers/response")
-const { registerUserModel: registerModel, verifyAccountModel: verifyAccount, loginUserModel: loginUser, forgotPassModel: forgotPass } = require('../models/auth')
+const { createUserBySuperAdminModel: createUser, registerUserModel: registerModel, verifyAccountModel: verifyAccount, loginUserModel: loginUser, forgotPassModel: forgotPass } = require('../models/auth')
 const { checkDuplicate: checkEmail, checkOTP: checkOTPCode } = require('../middlewares/validate')
 const { sendEmailVerification: sendEmail, sendEmailLink: sendLink } = require('../configs/nodemailer')
 const { generateOTP: otp } = require('../helpers/otpGenerator')
@@ -20,7 +20,21 @@ const registerUserController = async (req: any, res: any) => {
     await sendEmail(email, otp_code)
     onSuccess(res, 200, 'Register Successfully, please check your email to verify your account!')
   } catch (error: any) {
-    console.log(error)
+    onFailed(res, 500, 'Internal Server Error', error.message)
+  }
+}
+
+const createUserBySuperAdminController = async (req: any, res: any) => {
+  try {
+    const { email, password, role } = req.body
+    const pass = await bcrypt.hash(password, 10)
+    const check = await checkEmail(email)
+    if (check.rowCount > 0) {
+      return onFailed(res, 409, 'Email already exist, please input another email')
+    }
+    await createUser(email, pass, role, 'active')
+    onSuccess(res, 200, 'Register Successfully!')
+  } catch (error: any) {
     onFailed(res, 500, 'Internal Server Error', error.message)
   }
 }
@@ -50,7 +64,7 @@ const loginUserController = async (req: any, res: any) => {
       const match = await bcrypt.compare(password, hashedPass)
       const payload = {
         id: result.id,
-        role: result.role_id,
+        role: result.role,
         email: result.email,
         otp: result.otp_code
       }
@@ -60,7 +74,7 @@ const loginUserController = async (req: any, res: any) => {
         const userId = await clientValue.get('userId')
         clientValue.set(`userToken-${userId}`, tokenResult)
         const token = await clientValue.get(`userToken-${userId}`)
-        onSuccess(res, 200, 'Login successfully', { id: result.id, token, role: result.role_id })
+        onSuccess(res, 200, 'Login successfully', { id: result.id, token, role: result.role })
       } else {
         onFailed(res, 403, 'Password is wrong!!')
       }
@@ -122,4 +136,4 @@ const logoutController = async (req: any, res: any) => {
   }
 }
 
-module.exports = { registerUserController, verifyAccountController, loginUserController, resetPassController, forgotPassController, logoutController }
+module.exports = { registerUserController, verifyAccountController, loginUserController, resetPassController, forgotPassController, logoutController, createUserBySuperAdminController }

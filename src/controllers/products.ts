@@ -12,10 +12,26 @@ const getAllProductsController = async (req: any, res: any) => {
       const imgValues = Object.values(item).filter((i: any) => {
         return String(i).includes('image')
       })
-      return { id: item.id, name: item.name, price: item.price, size: item.size, type_id: item.type_id, created_at: item.created_at, description: item.description, image: imgValues }
+      return { id: item.id, name: item.name, price: item.price, size: item.size, type_id: item.type_id, created_at: item.created_at, description: item.description, images: imgValues }
     })
     const total = Number(totalResponse.rows[0]['total'])
     onSuccess(res, 200, 'Get all products successfully', result, pagination(page, limit, total, req.query, '/products'))
+  } catch (error: any) {
+    onFailed(res, 500, 'Internal Server Error', error.message)
+  }
+}
+
+const getDetailProductController = async (req: any, res: any) => {
+  try {
+    const { id } = req.params
+    const response = await detailModel(id)
+    const result = response.rows.map((item: any) => {
+      const imgValues = Object.values(item).filter((i: any) => {
+        return String(i).includes('image')
+      })
+      return { id: item.id, name: item.name, price: item.price, size: item.size, type_id: item.type_id, created_at: item.created_at, description: item.description, images: imgValues }
+    })
+    onSuccess(res, 200, 'Get Detail Product successfully', result)
   } catch (error: any) {
     onFailed(res, 500, 'Internal Server Error', error.message)
   }
@@ -47,14 +63,5 @@ const updateProductController = async (req: any, res: any) => {
   }
 }
 
-const getDetailProductController = async (req: any, res: any) => {
-  try {
-    const { id } = req.params
-    const response = await detailModel(id)
-    onSuccess(res, 200, 'Get Detail Product successfully', response.rows)
-  } catch (error: any) {
-    onFailed(res, 500, 'Internal Server Error', error.message)
-  }
-}
 
 module.exports = { getDetailProductController, createProductsController, getAllProductsController, updateProductController }

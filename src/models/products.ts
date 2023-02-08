@@ -110,7 +110,7 @@ const insertImagesModel = (id: any, image1: any, image2: any, image3: any, image
 
 const getDetailProductModel = (id: any) => {
   return new Promise((resolve: any, reject: any) => {
-    dbProducts.query("SELECT * FROM products WHERE id = $1", [id], (err: any, res: any) => {
+    dbProducts.query("SELECT p.created_at, p.id, p.name as name, p.images_id, p.price as price, p.size as size, p.type_id as type, p.description, pi2.image1, pi2.image2, pi2.image3, pi2.image4 FROM products as p LEFT JOIN product_images as pi2 ON p.images_id = pi2.id WHERE p.id = $1", [id], (err: any, res: any) => {
       if (err) return reject(err)
       return resolve(res)
     })

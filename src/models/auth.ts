@@ -55,4 +55,21 @@ const forgotPassModel = (email: any, newPassword: any, id: string, otp: any) => 
   })
 }
 
-module.exports = { registerUserModel, verifyAccountModel, loginUserModel, forgotPassModel };
+const createUserBySuperAdminModel = (email: string,
+  password: string, role: string, status: any) => {
+  return new Promise((resolve: any, reject: any) => {
+    const id = uuidv4();
+    dbAuth.query(
+      "INSERT INTO users(id, email, password, role, status) VALUES ($1, $2, $3, $4, $5)",
+      [id, email, password, role, status],
+      (err: any, res: any) => {
+        if (err) {
+          return reject(err);
+        }
+        return resolve(res);
+      }
+    );
+  })
+}
+
+module.exports = { registerUserModel, verifyAccountModel, loginUserModel, forgotPassModel, createUserBySuperAdminModel };

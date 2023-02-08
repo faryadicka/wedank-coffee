@@ -1,3 +1,5 @@
+import { onFailed } from "../helpers/response"
+
 const { onFailed: fail, onSuccess: success } = require("../helpers/response")
 const jwtVerify = require('jsonwebtoken')
 
@@ -14,4 +16,12 @@ const verifyToken = async (req: any, res: any, next: any) => {
   })
 }
 
-module.exports = { verifyToken }
+const verifyRole = async (req: any, res: any, next: any) => {
+  const { role } = req.userInfo
+  if (role !== 'super_admin') {
+    return onFailed(res, 400, 'You are not a Super Admin!', null)
+  }
+  next()
+}
+
+module.exports = { verifyToken, verifyRole }
