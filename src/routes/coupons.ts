@@ -4,6 +4,6 @@ const { verifyToken } = require('../middlewares/verify')
 
 RouteCoupon
   .get('/', getAllCouponsController)
-  .patch('/apply-coupon/:id', verifyToken, applyCouponController)
+  // .patch('/apply-coupon/:id', verifyToken, applyCouponController)
 
 module.exports = RouteCoupon
