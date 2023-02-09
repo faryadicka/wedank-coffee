@@ -1,6 +1,6 @@
 import { onSuccess, onFailed } from "../helpers/response"
 
-const { getAllCouponsModel: getAllCoupons, applyCouponModel, getCouponByIdModel } = require('../models/coupons')
+const { getAllCouponsModel: getAllCoupons, createCouponModel } = require('../models/coupons')
 
 const getAllCouponsController = async (req: any, res: any) => {
   try {
@@ -10,6 +10,17 @@ const getAllCouponsController = async (req: any, res: any) => {
     onFailed(res, 500, 'Internal Server Error', error.message)
   }
 }
+
+const createCouponController = async (req: any, res: any) => {
+  try {
+    const { couponCode, couponDisc, couponDesc, couponImage, couponName, endedAt } = req.body
+    const response = await createCouponModel(couponCode, couponDisc, couponDesc, endedAt, couponImage, couponName)
+    onSuccess(res, 200, 'Create coupon successfully', response)
+  } catch (error: any) {
+    onFailed(res, 500, 'Internal Server Error', error.message)
+  }
+}
+
 
 // const applyCouponController = async (req: any, res: any) => {
 //   try {
@@ -28,4 +39,4 @@ const getAllCouponsController = async (req: any, res: any) => {
 //   }
 // }
 
-module.exports = { getAllCouponsController }
+module.exports = { getAllCouponsController, createCouponController }
